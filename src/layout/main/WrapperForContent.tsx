@@ -5,7 +5,7 @@ import {MyPostsContainer} from "./myPosts/MyPostsContainer";
 import {DialogsContainer} from "../inbox/DialogsContainer";
 import {Styles} from "./ContentWindow_Styles";
 import {Feeds} from "../feeds/Feeds";
-import FriendsContainer from "../users/UsersContainer";
+import UsersContainer from "../users/UsersContainer";
 
 export const WrapperForContent = () => {
   return (
@@ -13,7 +13,7 @@ export const WrapperForContent = () => {
       <Redirect from='/' to='/myprofile'/>
       <Route path='/myprofile' render={() => <MyPostsContainer/>}/>
       <Route path='/inbox' render={() => <DialogsContainer/>}/>
-      <Route path='/friends' render={() => <FriendsContainer/>}/>
+      <Route path='/friends' render={() => <UsersContainer/>}/>
 
       <Route path='/melodies' component={Melodies}/>
 

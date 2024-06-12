@@ -11,6 +11,7 @@ import {
   InitialStateUsersPagePropsType, UserPropsType,
 
 } from "../../redux/storeAllPropsType";
+import UsersC from "./UsersС";
 
 type MSTPType = {
   usersPage: InitialStateUsersPagePropsType
@@ -40,4 +41,5 @@ const MDTP = (dispatch: Dispatch): MDTPType => {
     }
   }
 }
-export default connect(MSTP, MDTP)(Users)
+// export default connect(MSTP, MDTP)(Users)
+export default connect(MSTP, MDTP)(UsersC)
