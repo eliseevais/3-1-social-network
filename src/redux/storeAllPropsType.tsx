@@ -47,26 +47,29 @@ export type FeedsPagePropsType = {
 
 // Users
 type LocationUserPropsType = {
-  city: string,
+  city: string;
   country: string
 };
 export type UserPropsType = {
-  name: string
-  id: number
+  name: string;
+  id: number;
   uniqueUrlName?: null;
   photos: {
     small: null,
     large: null
-  }
-  status: string
-  followed: boolean
+  };
+  status: string;
+  followed: boolean;
 };
 export type UsersPagePropsTypeFromApp = {
   users: Array<UserPropsType>
 };
 
 export type InitialStateUsersPagePropsType = {
-  users: Array<UserPropsType>
+  users: Array<UserPropsType>;
+  pageSize: number;
+  totalUsersCount: number;
+  currentPage: number
 };
 
 // I use AppStateType from reduxStore instead StatePropsType
@@ -104,6 +107,14 @@ type SetUsersActionType = {
   users: Array<UserPropsType>;
   type: 'SET_USERS'
 };
+type SetCurrentPageActionType = {
+  currentPage: number;
+  type: 'SET_CURRENT_PAGE'
+};
+type SetTotalUsersCount = {
+  totalCount: number;
+  type: 'SET_TOTAL_USERS_COUNT'
+}
 
 export type ActionsPropsType =
   AddPostActionType
@@ -112,7 +123,9 @@ export type ActionsPropsType =
   | SendMessageActionType
   | FollowActionType
   | UnfollowActionType
-  | SetUsersActionType;
+  | SetUsersActionType
+  | SetCurrentPageActionType
+  | SetTotalUsersCount;
 
 export type StorePropsType = {
   _state: AppStateType;

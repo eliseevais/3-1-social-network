@@ -1,60 +1,85 @@
-import React from "react";
+import React, {MouseEventHandler} from "react";
 import {Styles} from "./Users_Styles";
 import {UsersPagePropsType} from "./UsersContainer";
 import axios from "axios";
 import userImage from "../../accets/img/imageUser.jpg"
+import {AppStateType} from "../../redux/reduxStore";
 
-export const Users = (props: UsersPagePropsType) => {
-
-  let getUsers = () => {
-    if (props.usersPage.users.length === 0) {
-
-      axios.get('https://social-network.samuraijs.com/api/1.0/users')
-        .then(res => {
-          props.setUsers(res.data.items)
-        })
-    }
+class Users extends React.Component<UsersPagePropsType, AppStateType> {
+  componentDidMount() {
+    axios.get(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}`)
+      .then(res => {
+        this.props.setUsers(res.data.items)
+        this.props.setTotalUsersCount(res.data.totalCount)
+      })
   }
 
-  console.log(props.usersPage.users)
+  onPageChanged = (pageNumber: number) => {
+    this.props.setCurrentPage(pageNumber);
+    axios.get(`https://social-network.samuraijs.com/api/1.0/users?page=${pageNumber}&count=${this.props.pageSize}`)
+      .then(res => {
+        this.props.setUsers(res.data.items)
+      })
+  }
 
-  return (
-    <div>
-      <button onClick={getUsers}>get Users</button>
-      {
-        props.usersPage.users.map(u => <Styles.UserWrapper key={u.id}>
-            <Styles.PhotoAndButton>
-              <Styles.UserAvatar src={u.photos.small != null
-                ? u.photos.small
-                : userImage}/>
-              <div>
-                {
-                  u.followed
-                    ? <Styles.ButtonFollowUnfollow
-                      onClick={() => props.unfollow(u.id)}>
-                      Unfollow
-                    </Styles.ButtonFollowUnfollow>
-                    : <Styles.ButtonFollowUnfollow
-                      onClick={() => props.follow(u.id)}>
-                      Follow
-                    </Styles.ButtonFollowUnfollow>
-                }
-              </div>
-            </Styles.PhotoAndButton>
-            <Styles.UserPreview>
-              <Styles.NameAndStatus>
-                <div>{u.name}</div>
-                <div>{u.status}</div>
-              </Styles.NameAndStatus>
-              <Styles.Location>
-                {/*<div>{u.location?.country}</div>*/}
-                {/*<div>{u.location?.city}</div>*/}
-              </Styles.Location>
-            </Styles.UserPreview>
+  render() {
 
-          </Styles.UserWrapper>
-        )
-      }
-    </div>
-  )
+    let pagesCount = Math.ceil(this.props.totalUsersCount / this.props.pageSize);
+    let pages = [];
+    for (let i = 1; i <= pagesCount; i++) {
+      pages.push(i)
+    }
+
+    return (
+      <div>
+        <div>
+          {pages.map(p => {
+            return this.props.currentPage === p
+              ? <Styles.SelectedPage
+                key={`pagination-page-${p}`}
+              >
+                {p}</Styles.SelectedPage>
+              : <Styles.Page key={`pagination-page-${p}`}
+                             onClick={() => {
+                               this.onPageChanged(p)
+                             }}>{p}</Styles.Page>
+          })}
+        </div>
+        <div>
+          {
+            this.props.usersPage.map(u => <Styles.UserWrapper key={u.id}>
+                <Styles.PhotoAndButton>
+                  <Styles.UserAvatar src={u.photos.small != null
+                    ? u.photos.small
+                    : userImage}/>
+                  <div>
+                    {
+                      u.followed
+                        ? <Styles.ButtonFollowUnfollow
+                          onClick={() => this.props.unfollow(u.id)}>
+                          Unfollow
+                        </Styles.ButtonFollowUnfollow>
+                        : <Styles.ButtonFollowUnfollow
+                          onClick={() => this.props.follow(u.id)}>
+                          Follow
+                        </Styles.ButtonFollowUnfollow>
+                    }
+                  </div>
+                </Styles.PhotoAndButton>
+                <Styles.UserPreview>
+                  <Styles.NameAndStatus>
+                    <div>{u.name}</div>
+                    <div>{u.status}</div>
+                  </Styles.NameAndStatus>
+                </Styles.UserPreview>
+
+              </Styles.UserWrapper>
+            )
+          }
+        </div>
+      </div>
+    )
+  }
 }
+
+export default Users;

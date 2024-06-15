@@ -54,6 +54,15 @@ const UserWrapper = styled.div`
   border-radius: 30px;
 `
 
+const Page = styled.span`
+  cursor: pointer;
+  margin: 4px;
+`
+
+const SelectedPage = styled(Page)`
+  font-weight: 900;
+`
+
 export const Styles = {
   ButtonFollowUnfollow,
   Location,
@@ -61,5 +70,7 @@ export const Styles = {
   PhotoAndButton,
   UserAvatar,
   UserPreview,
-  UserWrapper
+  UserWrapper,
+  SelectedPage,
+  Page
 }
